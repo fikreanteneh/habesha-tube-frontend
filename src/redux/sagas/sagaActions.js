@@ -1,0 +1,10 @@
+export const sagaActions = {
+    SIGNUP: "SIGNUP",
+    SIGNIN: "SIGNIN",
+
+    ADDSONG: "ADDSONG",
+    DELETESONG: "DELETESONG",
+    EDITSONG: "EDITSONG",
+    LOADSONGS: "LOADSONGS",
+    MYSONGS: "MYSONGS",
+}
