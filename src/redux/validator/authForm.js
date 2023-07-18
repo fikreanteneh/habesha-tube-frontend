@@ -32,7 +32,6 @@ export const signUpChecker = (model) => {
 
 export const signInChecker = (model) => {
     const {email, password} = model
-    console.log(model, "===================")
     if (emailChecker(email)) {
          throw new Error(emailChecker(email))
     }

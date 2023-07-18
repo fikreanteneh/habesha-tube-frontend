@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { getDownloadURL, ref, uploadBytes, deleteObject } from "firebase/storage";
 import { storage } from "../../config/firebase";
+import { addSongChecker, editSongChecker } from '../validator/songForm';
 
 
 export async function getSong() {
@@ -35,6 +36,7 @@ export async function getSongById(payload) {
 
 
 export async function addSong(payload) {
+    addSongChecker(payload)
     const audioPath = `song/${uuidv4()}.${payload.fileLocation.type.split("/")[1]}`
     const audioRef = ref(storage, audioPath)
     await uploadBytes(audioRef, payload.fileLocation)
@@ -56,6 +58,7 @@ export async function addSong(payload) {
 
 
 export async function editSong(payload) {
+    editSongChecker(payload)
     const response = await fetch(`${import.meta.env.VITE_APP_BASE}/songs/${payload.id}`, {
         method: 'PUT',
         headers: {
@@ -77,7 +80,7 @@ export async function deleteSong(payload) {
             'Content-Type': 'application/json'
         },
     })
-    const fileRef = ref(storage, `song/${payload.fileLocation}`)
+    const fileRef = ref(storage, payload.fileLocation)
     await deleteObject(fileRef)
     if (response.status != "200"){
         const error = await response.json();

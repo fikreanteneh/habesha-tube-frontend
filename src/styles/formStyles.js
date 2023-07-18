@@ -4,9 +4,13 @@ import styled from "@emotion/styled";
 export const TextField = styled.input({
     width: '100%',
     borderRadius: '10px',
+    border: '1.5px solid gray',
     fontSize: '1.2rem',
     height: '3rem',
-    margin: '4px auto'
+    margin: '4px auto',
+    ':focus': {
+        border: '1.5px solid blue',
+    }
 })
 
 export const TextArea = styled.textarea({
@@ -24,6 +28,7 @@ const generalButton = {
     fontSize: '1.5rem',
     color: 'white',
     borderRadius: '12px',
+    border: 'none',
     margin: '4px auto',
     backgroundColor: 'blue',
     ':hover': {

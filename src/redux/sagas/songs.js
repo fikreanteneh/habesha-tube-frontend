@@ -6,7 +6,7 @@ import { addSong, getSong, editSong, deleteSong, getSongById } from '../request/
 
 export function* handleAddSong(action) {
     try {
-      yield put(setSongLoading());
+      yield put(setSongLoading("submitting"));
       const song = yield call(addSong, action.payload);
       yield put(addingSong(song));
     } catch (error) {
@@ -17,7 +17,7 @@ export function* handleAddSong(action) {
 
 export function* handleLoadSongs() {
     try {
-      yield put(setSongLoading());
+      yield put(setSongLoading("loading"));
       const songs = yield call(getSong);
       yield put(loadSongs(songs.currData));
     } catch (error) {
@@ -27,7 +27,7 @@ export function* handleLoadSongs() {
 
   export function* handleLoadSongsById(action) {
     try {
-      yield put(setSongLoading());
+      yield put(setSongLoading("loading"));
       const songs = yield call(getSongById, action.payload);
       yield put(loadMySongs(songs.currData));
     } catch (error) {
@@ -37,7 +37,7 @@ export function* handleLoadSongs() {
 
 export function* handleEditSong(action) {
     try {
-        yield put(setSongLoading());
+        yield put(setSongLoading("submitting"));
         const song = yield call(editSong, action.payload);
         yield put(editingSong(song));
     } catch (error) {
@@ -47,11 +47,10 @@ export function* handleEditSong(action) {
 
 export function* handleDeleteSong(action) {
     try {
-        yield put(setSongLoading());
+        yield put(setSongLoading("submitting"));
         const user = yield call(deleteSong, action.payload);
         yield put(deletingSong(user));
     } catch (error) {
-      console.log(error)
         yield put(setSongFailed(error.message));
     }
 }

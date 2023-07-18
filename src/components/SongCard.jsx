@@ -1,32 +1,37 @@
-import { StyledDiv, CeneterHalfDiv, BetweenFlexDiv } from "../styles/divStyles"
-import { LeftTitle } from "../styles/textStyles"
+import { StyledDiv, InternalCard } from "../styles/divStyles"
+import { FooterDescription, LeftTitle } from "../styles/textStyles"
 import { CircleImage } from "../styles/imgeStyles"
 import { CardDiv } from "../styles/divStyles"
 import MusicLogo from "../assets/images/MusicLogo.png"
-import moment from "moment";
-export const SongCard = ({song}) => {
-console.log(Date.now())
-  const now = moment();
-  const diffInSec = now.diff(Date(song.createdAt), 'seconds');
-  const relativeTime = moment.duration(new Date() , "seconds").humanize(true);
+import Play from "../assets/images/Play.png"
 
+
+import moment from "moment"
+
+
+// eslint-disable-next-line react/prop-types
+export const SongCard = ({song, selecting}) => {
+
+  // eslint-disable-next-line react/prop-types
+  const {createdAt, author, title} = song
+  
+  // eslint-disable-next-line react/prop-types
+  const timestamp = createdAt.seconds * 1000 // convert to firebase secnd to milliseconds
+  const dateObject = new Date(timestamp)
+  const now = moment();
+  const diffInSec = now.diff(dateObject, 'seconds');
+  const relativeTime = moment.duration(diffInSec, "seconds").humanize(false);
   return (
     <StyledDiv>
-      <CeneterHalfDiv>
         <CardDiv>
           <CircleImage src={MusicLogo} ></CircleImage>
-          <div>
-            <LeftTitle>{song.title}</LeftTitle>
-          <BetweenFlexDiv>
-            <p>{song.author}</p>
-            <p>{relativeTime}</p>
-            <p>{Date(song.createdAt)}</p>
-
-
-          </BetweenFlexDiv>
-          </div>
+          <InternalCard>
+            <LeftTitle>{title}</LeftTitle>
+              <FooterDescription>{author}</FooterDescription>
+              <FooterDescription>{relativeTime}</FooterDescription>
+          </InternalCard>
+          <CircleImage src={Play} onClick={() => selecting(song)} ></CircleImage>
         </CardDiv>
-        </CeneterHalfDiv>
     </StyledDiv>
   )
 }

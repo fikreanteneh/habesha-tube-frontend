@@ -1,33 +1,54 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { sagaActions } from './../redux/sagas/sagaActions';
 import { HeadingLarge } from './../styles/textStyles';
 import { Button, TextField, TextArea } from './../styles/formStyles';
 import { CenterFlexDiv, CeneterHalfDiv } from './../styles/divStyles';
+import { toast } from 'react-toastify';
+import { resetSongsFaild } from '../redux/ducks/songs';
+import { Spinner } from './../components/Spinner';
 
 
 export const AddSong = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const [formData, setFormData] = useState({title: "", description: "", fileLocation: "", author: "", createdBy: "" })
   const audioRef = useRef()
+  const [submitted, setSubmitted] = useState(false)
   const { currentUser } = useSelector(state => state.auth)
+  const { songError, songStatus } = useSelector(state => state.songs)
+  const [formData, setFormData] = useState({title: "", description: "", fileLocation: "", createdBy: currentUser.email, author: currentUser.fullName, })
+  
+  useEffect(() => {
+    if (songError) {
+      toast(songError)
+      return () => {
+        dispatch(resetSongsFaild);
+      }
+    }
+  }, [songError, dispatch])
+
+  const handleChange = (e) =>{
+    const {id, value} = e.target
+    setFormData((oldData) => ({...oldData, [id]: value }))
+}
+
+  if (songStatus == "loaded" && submitted){
+    navigate('/profile')
+  }
 
   
-  const handleChange = (e) =>{
-      const {id, value} = e.target
-      setFormData((oldData) => ({...oldData, [id]: value }))
-  }
-
   const handleSubmit = (e) =>{
       e.preventDefault()
-      setFormData((oldData) => ({...oldData, 
-        createdBy: currentUser.email, author: currentUser.fullName, fileLocation: audioRef.current.files[0]}))
-      dispatch({type: sagaActions.ADDSONG, payload: formData})
-      navigate('/profile')
+      dispatch({type: sagaActions.ADDSONG, payload: {...formData, fileLocation: audioRef.current.files[0]}})
+      setSubmitted(true)
       
   }
+
+  if (songStatus == "submitting"){
+    return <Spinner />
+  }
+
   return (
     <CenterFlexDiv>
     <CeneterHalfDiv>

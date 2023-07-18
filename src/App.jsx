@@ -10,7 +10,10 @@ import { loadUser } from './redux/ducks/auth';
 import { AddSong } from './pages/AddSong';
 import { useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
+import { useSelector } from 'react-redux';
+import { Spinner } from './components/Spinner';
 import 'react-toastify/dist/ReactToastify.css';
+import { EditSong } from './pages/EditSong';
 
 
 export const Root = () => {
@@ -19,6 +22,11 @@ export const Root = () => {
     dispatch(loadUser())
   }, [])
 
+  const {authStatus} = useSelector(state => state.auth)
+
+  if (authStatus == "loading") {
+    return <Spinner/>
+  }
   return (
       <div className='main'>
           <Header/>
@@ -39,7 +47,7 @@ const router = createBrowserRouter(
         <Route element = {<PrivateRoute routeType={"private"}/>}>
           <Route path='/profile' element={<Profile/>}/>
           <Route path='/addsong' element={<AddSong/>}/>
-
+          <Route path='/editsong' element={<EditSong/>}/>
         </Route> 
         <Route element = {<PrivateRoute routeType={"public"}/>}>
           <Route path='/signin' element={<Signin />} />

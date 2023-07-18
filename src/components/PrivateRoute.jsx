@@ -7,10 +7,9 @@ export const PrivateRoute = ({routeType}) => {
 
   const {authStatus} = useSelector(state => state.auth)
 
-  if (authStatus == "loading") {
+  if (authStatus == "signin" || authStatus == "signup")  {
     return <Spinner/>
   }
-  
   const routeTypes = {
     "private" : authStatus == "authenticated" ? <Outlet/> : <Navigate to="/signin"/>,
     "public": authStatus != "authenticated" ? <Outlet/> : <Navigate to="/"/>

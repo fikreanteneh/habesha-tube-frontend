@@ -1,5 +1,7 @@
+import { signInChecker, signUpChecker } from "../validator/authForm";
 
 export async function signinWithEmail(payload) {
+    signInChecker(payload)
     const response = await fetch(`${import.meta.env.VITE_APP_BASE}/auth/signin`, {
         method: 'POST',
         headers: {
@@ -16,6 +18,7 @@ export async function signinWithEmail(payload) {
 
 
 export async function signUpWithEmail(payload) {
+    signUpChecker(payload)
     const response = await fetch(`${import.meta.env.VITE_APP_BASE}/auth/signup`, {
         method: 'POST',
         headers: {

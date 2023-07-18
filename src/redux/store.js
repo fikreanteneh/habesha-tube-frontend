@@ -10,7 +10,7 @@ let sagaMiddleware = createSagaMiddleware()
 export const store = configureStore({
     reducer: { auth: authReducer, songs: songReducer},
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(sagaMiddleware),
+      getDefaultMiddleware({serializableCheck: false}).concat(sagaMiddleware),
   })
     
 sagaMiddleware.run(authSaga)

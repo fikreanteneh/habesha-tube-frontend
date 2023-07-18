@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react'
 import AuthBackground from '../assets/images/AuthBackground.png'
 import { Link,  } from 'react-router-dom'
 import { useDispatch,  } from 'react-redux'
-import { CeneterHalfDiv, CenterFlexDiv, BetweenFlexDiv } from '../styles/divStyles'
-import { HeadingLarge, Paragraph } from './../styles/textStyles';
+import { CeneterHalfDiv, CenterFlexDiv, FlexDiv } from '../styles/divStyles'
+import { HeadingLarge, Paragraph, ParagraphLink } from './../styles/textStyles';
 import { Button, TextField } from '../styles/formStyles'
 import { RoundedImage } from '../styles/imgeStyles'
 import { sagaActions } from '../redux/sagas/sagaActions'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
+import { resetAuthFaild } from '../redux/ducks/auth'
 
 
 export const Signup = () => {
@@ -19,9 +20,12 @@ export const Signup = () => {
 
     useEffect(() => {
         if (authError) {
-            toast(authError)
+            toast.error(authError)   
+            return () => {
+                dispatch(resetAuthFaild());
+              };
         }
-    }, [dispatch])
+    }, [authError, dispatch])
 
     let showPassword = false;
 
@@ -48,9 +52,10 @@ export const Signup = () => {
                     <TextField type='text' placeholder='Full Name' id='fullName' value={formData.fullName} onChange={handleChange}></TextField>
                     <TextField type='email' placeholder='username' id='email' value={formData.email} onChange={handleChange}></TextField>
                     <TextField type={showPassword ? 'text': 'password'} placeholder='Password' id='password' value={formData.password} onChange={handleChange}></TextField>
-                    <BetweenFlexDiv>
-                        <Paragraph>Already have an account? <Link to='/signin'>Sign in</Link></Paragraph>
-                    </BetweenFlexDiv>
+                    <FlexDiv>
+                        <Paragraph>Already have an account?</Paragraph>
+                        <ParagraphLink><Link to='/signin'>Sign in</Link></ParagraphLink>
+                    </FlexDiv>
                     <Button type='submit' onClick={handleSubmit}>Sign Up</Button>
             
                 </form>

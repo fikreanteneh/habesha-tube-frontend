@@ -2,19 +2,20 @@ import { useDispatch, useSelector } from 'react-redux'
 import { signout } from '../redux/ducks/auth'
 import { useNavigate } from 'react-router-dom'
 import { HeadingLarge, HeadingMedium } from '../styles/textStyles'
-import { CenterFlexDiv, CeneterHalfDiv } from '../styles/divStyles'
+import { CenterFlexDiv, CeneterHalfDiv, CenterContainer, BetweenFlexDiv, PlayerContainer, AudioPlayer } from '../styles/divStyles'
 import { LeftTitle } from './../styles/textStyles';
 import { Button, OrangeButton ,HalfButton, HalfOrangeButton } from '../styles/formStyles'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { sagaActions } from './../redux/sagas/sagaActions';
 import { SongCard } from '../components/SongCard'
-import { BetweenFlexDiv } from './../styles/divStyles';
 
 export const Profile = () => {
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const { currentUser } = useSelector(state => state.auth)
+
+    const [selectedSong, setSelectedSong] = useState(false)
 
     useEffect(() => {
         dispatch({type: sagaActions.MYSONGS, payload: currentUser.email})
@@ -43,22 +44,20 @@ export const Profile = () => {
             </CeneterHalfDiv>
         </CenterFlexDiv>
         <HeadingMedium> MySongs</HeadingMedium>
-        <CenterFlexDiv>
-            <CeneterHalfDiv>
+        <CenterContainer>
               {mySongs.map((song) => (
-                <>{console.log(song)}
-                    <SongCard key={song.id} song={song}/>
+                <div key={song.id}>
+                    <SongCard  song={song} selecting={setSelectedSong}/>
                     <BetweenFlexDiv>
-                        {/* <HalfButton type='submit' onClick={() =>navigate(`/editsong/${song.id}`)}>Edit Song</HalfButton> */}
+                        <HalfButton type='submit' onClick={() =>navigate(`/editsong`, {state: song})}>Edit Song</HalfButton>
                         <HalfOrangeButton type='submit' onClick={() => dispatch({type:sagaActions.DELETESONG, payload:song})}>Delete Song</HalfOrangeButton>
                     </BetweenFlexDiv>
-                </>
+                </div>
                 ))}
-            </CeneterHalfDiv>
-            <CeneterHalfDiv>
-              
-            </CeneterHalfDiv>
-        </CenterFlexDiv>
+        </CenterContainer>
+        <PlayerContainer>
+          {selectedSong && <AudioPlayer controls autoPlay={true}><source src={selectedSong.fileLocation} /></AudioPlayer>}
+        </PlayerContainer>
 
     </section>
   )

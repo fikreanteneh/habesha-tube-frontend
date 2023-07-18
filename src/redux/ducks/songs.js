@@ -33,6 +33,7 @@ const songSlice = createSlice({
         },
 
         deletingSong: (state, action) => {
+          console.log("============",action.payload)
           state.currentSongs = state.currentSongs.filter(song => song.id !== action.payload.id)
           state.mySongs = state.mySongs.filter(song => song.id !== action.payload.id)
           state.songStatus = 'loaded';
@@ -56,18 +57,23 @@ const songSlice = createSlice({
             state.songError = null;
         },
 
-        setSongLoading: (state) => {
-          state.songStatus = 'loading';
+        setSongLoading: (state, action) => {
+          state.songStatus = action.payload;
           state.songError = null;
         },
 
         setSongFailed: (state, action) => {
           state.songStatus = 'failed';
           state.songError = action.payload;
+        },
+
+        resetSongsFaild: (state) => {
+          state.songStatus = 'loaded';
+          state.songError = null;
         }
         
     },
 })
 
-export const {loadSongs, addingSong, deletingSong, editingSong, setSongLoading, setSongFailed, loadMySongs} = songSlice.actions;
+export const {loadSongs, addingSong, deletingSong, editingSong, setSongLoading, setSongFailed, loadMySongs, resetSongsFaild} = songSlice.actions;
 export default songSlice.reducer;

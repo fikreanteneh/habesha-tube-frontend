@@ -3,12 +3,13 @@ import AuthBackground from '../assets/images/AuthBackground.png'
 import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { HeadingLarge, ParagraphLink, Paragraph } from '../styles/textStyles'
-import { CenterFlexDiv, CeneterHalfDiv, BetweenFlexDiv } from '../styles/divStyles'
+import { CenterFlexDiv, CeneterHalfDiv,  FlexDiv } from '../styles/divStyles'
 import { RoundedImage } from '../styles/imgeStyles'
 import { TextField, Button } from '../styles/formStyles'
 import { sagaActions } from '../redux/sagas/sagaActions'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
+import { resetAuthFaild } from '../redux/ducks/auth'
 
 export const Signin = () => {
     const dispatch = useDispatch()
@@ -16,14 +17,17 @@ export const Signin = () => {
     let showPassword = false;
 
     const { authError } = useSelector(state => state.auth)
+    
     useEffect(() => {
         if (authError) {
-            // console.log("============", authError)
-            toast.error(authError)
-
+            toast.error(authError)   
+            return () => {
+                dispatch(resetAuthFaild());
+              };
         }
-    }, [dispatch])
-    
+    }, [authError, dispatch])
+
+
     const handleChange = (e) =>{
         const {id, value} = e.target
         setFormData((oldData) => ({...oldData, [id]: value }))
@@ -33,7 +37,7 @@ export const Signin = () => {
         e.preventDefault()
         dispatch({type: sagaActions.SIGNIN, payload: formData})
     }
-
+    
 
   return (
     <section>
@@ -46,10 +50,10 @@ export const Signin = () => {
                 <form>
                     <TextField type='email' placeholder='username' id='email' value={formData.email} onChange={handleChange}></TextField>
                     <TextField type={showPassword ? 'text': 'password'} placeholder='Password' id='password' value={formData.password} onChange={handleChange}></TextField>
-                    <BetweenFlexDiv>
-                        <Paragraph>Dont have an account?<Link to='/signup'>Register</Link></Paragraph>
-                        <ParagraphLink><Link to="/forgotpassword"> Forgot Password?</Link></ParagraphLink>
-                    </BetweenFlexDiv>
+                    <FlexDiv>
+                        <Paragraph>Dont have an account?</Paragraph>
+                        <ParagraphLink><Link to='/signup'>Register</Link></ParagraphLink>
+                    </FlexDiv>
                     <Button type='submit' onClick={handleSubmit}>Sign In</Button>
                 </form>
 
