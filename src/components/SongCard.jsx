@@ -10,7 +10,7 @@ import moment from "moment"
 import { useDispatch } from "react-redux"
 import { useNavigate } from 'react-router-dom';
 import { sagaActions } from "../redux/sagas/sagaActions"
-
+import {useState} from "react"
 
 // eslint-disable-next-line react/prop-types
 export const SongCard = ({song, selecting, type, index}) => {
@@ -19,7 +19,8 @@ export const SongCard = ({song, selecting, type, index}) => {
   const dispatch = useDispatch()
 
   // eslint-disable-next-line react/prop-types
-  const {createdAt, author, title} = song
+  const {createdAt, author, title, description} = song
+  const [showDescription, setShowDescription] = useState(false); 
   
   // eslint-disable-next-line react/prop-types
   const timestamp = createdAt.seconds * 1000 // convert to firebase secnd to milliseconds
@@ -31,24 +32,30 @@ export const SongCard = ({song, selecting, type, index}) => {
   const handleSelection = (index) => {
     selecting(() => index)
   }
+  const handleDesc = () => {
+    setShowDescription((prev) => !prev)
+  }
 
   return (
-    <StyledDiv>
-        <CardDiv>
-          <CircleImage src={MusicLogo} ></CircleImage>
-          <InternalCard>
-            <LeftTitle>{title}</LeftTitle>
-              <FooterDescription>{author}</FooterDescription>
-              <FooterDescription>{relativeTime}</FooterDescription>
-          </InternalCard>
-          {type == "editor" && 
-          <>
-            <CircleImage src={Delete} onClick={() => dispatch({type:sagaActions.DELETESONG, payload:song})}  ></CircleImage>
-            <CircleImage src={Edit} onClick={() => navigate(`/editsong`, {state: song}) }></CircleImage>
-          </>
-          }
-          <CircleImage src={Play} onClick={() => handleSelection(index)} ></CircleImage>
-        </CardDiv>
-    </StyledDiv>
+    <>
+      <StyledDiv>
+          <CardDiv>
+            <CircleImage src={MusicLogo} onClick={handleDesc}></CircleImage>
+            <InternalCard >
+              <LeftTitle>{title}</LeftTitle>
+                <FooterDescription>{author}</FooterDescription>
+                <FooterDescription>{relativeTime}</FooterDescription>
+            </InternalCard>
+            {type == "editor" && 
+            <>
+              <CircleImage src={Delete} onClick={() => dispatch({type:sagaActions.DELETESONG, payload:song})}  ></CircleImage>
+              <CircleImage src={Edit} onClick={() => navigate(`/editsong`, {state: song}) }></CircleImage>
+            </>
+            }
+            <CircleImage src={Play} onClick={() => handleSelection(index)} ></CircleImage>
+          </CardDiv>
+        {showDescription && <CardDiv><p>{description}</p></CardDiv>}
+      </StyledDiv>     
+    </>
   )
 }
