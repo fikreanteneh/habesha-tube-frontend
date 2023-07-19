@@ -18,11 +18,12 @@ import { EditSong } from './pages/EditSong';
 
 export const Root = () => {
   const dispatch = useDispatch()
+  const {authStatus} = useSelector(state => state.auth)
+  
   useEffect(() => {
     dispatch(loadUser())
   }, [])
-
-  const {authStatus} = useSelector(state => state.auth)
+  
 
   if (authStatus == "loading") {
     return <Spinner/>

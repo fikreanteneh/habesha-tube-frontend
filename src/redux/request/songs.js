@@ -86,5 +86,5 @@ export async function deleteSong(payload) {
         const error = await response.json();
         throw new Error(error.error)
     }
-    return await response.json()
+    return payload
 }

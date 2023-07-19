@@ -5,37 +5,40 @@ const songSlice = createSlice({
     initialState: {
         currentSongs: [],  
         mySongs: [],           
-        songStatus: 'unloaded',        // unloaded | loaded | faild | loading
-        songError: null,               //Null or error message
+        songStatus: 'unloaded',        
+        songError: null,       
     },
 
     reducers: {
 
         loadSongs: (state, action) => {
             state.currentSongs = action.payload;
-            state.songStatus = 'loaded';
+            state.songStatus = "loaded"
             state.songError = null;
           },
         
         loadMySongs: (state, action) => {
           state.mySongs = action.payload;
-          state.songStatus = 'loaded';
+          state.songStatus = "loaded"
           state.songError = null;
         },
 
 
         addingSong: (state, action) => {
-            state.currentSongs.shift(action.payload);
-            state.mySongs.shift(action.payload)
+            console.log("adding",action.payload)
+            console.log("before",state.currentSongs.length)
+            state.currentSongs.unshift(action.payload)
+            state.mySongs.unshift(action.payload)
+            console.log("before",state.currentSongs.length)
             state.songStatus = 'loaded';
             state.songError = null;
-            
         },
 
         deletingSong: (state, action) => {
-          console.log("============",action.payload)
-          state.currentSongs = state.currentSongs.filter(song => song.id !== action.payload.id)
-          state.mySongs = state.mySongs.filter(song => song.id !== action.payload.id)
+          const tempCurrent = state.currentSongs.filter(song => song.id !== action.payload.id)
+          state.currentSongs = tempCurrent
+          const tempMy = state.mySongs.filter(song => song.id !== action.payload.id)
+          state.mySongs = tempMy
           state.songStatus = 'loaded';
           state.songError = null;
         },
@@ -70,10 +73,17 @@ const songSlice = createSlice({
         resetSongsFaild: (state) => {
           state.songStatus = 'loaded';
           state.songError = null;
+        },
+
+        clearSongs: (state) => {
+          state.currentSongs = [];
+          state.mySongs = [];
+          state.songStatus = 'unloaded';
+          state.songError = null;
         }
         
     },
 })
 
-export const {loadSongs, addingSong, deletingSong, editingSong, setSongLoading, setSongFailed, loadMySongs, resetSongsFaild} = songSlice.actions;
+export const {loadSongs, addingSong, deletingSong, editingSong, setSongLoading, setSongFailed, loadMySongs, resetSongsFaild, clearSongs} = songSlice.actions;
 export default songSlice.reducer;

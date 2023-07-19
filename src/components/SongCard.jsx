@@ -4,13 +4,19 @@ import { CircleImage } from "../styles/imgeStyles"
 import { CardDiv } from "../styles/divStyles"
 import MusicLogo from "../assets/images/MusicLogo.png"
 import Play from "../assets/images/Play.png"
-
-
+import Edit from "../assets/images/Edit.png"
+import Delete from "../assets/images/Delete.png"
 import moment from "moment"
+import { useDispatch } from "react-redux"
+import { useNavigate } from 'react-router-dom';
+import { sagaActions } from "../redux/sagas/sagaActions"
 
 
 // eslint-disable-next-line react/prop-types
-export const SongCard = ({song, selecting}) => {
+export const SongCard = ({song, selecting, type, index}) => {
+
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   // eslint-disable-next-line react/prop-types
   const {createdAt, author, title} = song
@@ -21,6 +27,11 @@ export const SongCard = ({song, selecting}) => {
   const now = moment();
   const diffInSec = now.diff(dateObject, 'seconds');
   const relativeTime = moment.duration(diffInSec, "seconds").humanize(false);
+
+  const handleSelection = (index) => {
+    selecting(() => index)
+  }
+
   return (
     <StyledDiv>
         <CardDiv>
@@ -30,7 +41,13 @@ export const SongCard = ({song, selecting}) => {
               <FooterDescription>{author}</FooterDescription>
               <FooterDescription>{relativeTime}</FooterDescription>
           </InternalCard>
-          <CircleImage src={Play} onClick={() => selecting(song)} ></CircleImage>
+          {type == "editor" && 
+          <>
+            <CircleImage src={Delete} onClick={() => dispatch({type:sagaActions.DELETESONG, payload:song})}  ></CircleImage>
+            <CircleImage src={Edit} onClick={() => navigate(`/editsong`, {state: song}) }></CircleImage>
+          </>
+          }
+          <CircleImage src={Play} onClick={() => handleSelection(index)} ></CircleImage>
         </CardDiv>
     </StyledDiv>
   )

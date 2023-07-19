@@ -48,8 +48,8 @@ export function* handleEditSong(action) {
 export function* handleDeleteSong(action) {
     try {
         yield put(setSongLoading("submitting"));
-        const user = yield call(deleteSong, action.payload);
-        yield put(deletingSong(user));
+        const song = yield call(deleteSong, action.payload);
+        yield put(deletingSong(song));
     } catch (error) {
         yield put(setSongFailed(error.message));
     }

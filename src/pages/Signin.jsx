@@ -10,6 +10,7 @@ import { sagaActions } from '../redux/sagas/sagaActions'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { resetAuthFaild } from '../redux/ducks/auth'
+import { clearSongs } from '../redux/ducks/songs'
 
 export const Signin = () => {
     const dispatch = useDispatch()
@@ -36,6 +37,7 @@ export const Signin = () => {
     const handleSubmit = (e) =>{
         e.preventDefault()
         dispatch({type: sagaActions.SIGNIN, payload: formData})
+        dispatch(clearSongs())
     }
     
 

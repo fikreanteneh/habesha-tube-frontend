@@ -10,7 +10,7 @@ const authSlice = createSlice({
     name: 'auth',
     initialState: {
         currentUser: null,             //Null or User Object
-        authStatus: 'unauthenticated', // authenticated | loading | faild | unauthenticated | signup | signin
+        authStatus: 'loading', // authenticated | loading | faild | unauthenticated | signup | signin
         authError: null,               //Null or error message
     },
 
@@ -46,7 +46,6 @@ const authSlice = createSlice({
         setAuthLoading: (state, action) => {
           state.authStatus = action.payload;
           state.authError = null;
-          state.currentUser = 'unauthenticated';
         },
         
         // This is a reducer, that sets the auth status to failed

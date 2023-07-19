@@ -4,6 +4,8 @@ import { HeadingMedium } from '../styles/textStyles'
 import { CenterContainer, PlayerContainer, AudioPlayer } from '../styles/divStyles'
 import { SongCard } from '../components/SongCard'
 import { sagaActions } from '../redux/sagas/sagaActions';
+import { Spinner } from './../components/Spinner';
+import { toast } from 'react-toastify';
 
 
 
@@ -11,26 +13,58 @@ import { sagaActions } from '../redux/sagas/sagaActions';
 export const Home = () => {
       
     const dispatch = useDispatch()
-    const [selectedSong, setSelectedSong] = useState(false)
+    const { currentSongs, songStatus, songError } = useSelector(state => state.songs)
+    const {  authStatus, currentUser } = useSelector(state => state.auth)
+
+
+    const [selectedSong, setSelectedSong] = useState(0)
     useEffect(() => {
+      if (songStatus != 'loaded') {
         dispatch({type: sagaActions.LOADSONGS})
+        if (authStatus == 'authenticated') {
+          dispatch({type: sagaActions.MYSONGS, payload: currentUser.email})
+        }
+      }
     }, [])
 
-    const { currentSongs } = useSelector(state => state.songs)
+    useEffect(() => {
+      if (selectedSong > 0) {
+        const audioPlayer = document.getElementById('audio-player');
+        audioPlayer.src = currentSongs[selectedSong - 1].fileLocation;
+        audioPlayer.play();
+      }
+    }, [selectedSong, currentSongs]);
 
-    console.log(selectedSong)
+    if (songError){
+      toast(songError)
+      toast("Try Reloding the page")
+    }
+
+    const handleNext = () => {
+      setSelectedSong((index) => index % currentSongs.length + 1)
+    }
 
   return (
     <section >
         <HeadingMedium> Listen to the Best Songs</HeadingMedium>
-        <CenterContainer>
-            {currentSongs.map((song) => (
-              <SongCard key={song.id} song={song}  selecting={setSelectedSong}/>
+        { songStatus == 'loading' ? 
+          <Spinner/> :
+          <CenterContainer>
+            {currentSongs.map((song,index) => (
+              <SongCard key={song.id} song={song}  selecting={setSelectedSong} type="viewer" index={index + 1}/>
             ))}
-        </CenterContainer>
-        <PlayerContainer>
-          {selectedSong && <AudioPlayer controls autoPlay={true}><source src={selectedSong.fileLocation} /></AudioPlayer>}
-        </PlayerContainer>
+        </CenterContainer>}
+        { selectedSong > 0 &&
+          <PlayerContainer>
+            <AudioPlayer 
+              id='audio-player'
+              onEnded={handleNext} 
+              controls 
+              autoPlay={true}>
+              <source src={currentSongs[selectedSong - 1].fileLocation} />
+            </AudioPlayer>
+          </PlayerContainer>
+        }
 
     </section>
   )
