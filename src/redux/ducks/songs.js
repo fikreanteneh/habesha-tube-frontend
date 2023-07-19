@@ -25,11 +25,8 @@ const songSlice = createSlice({
 
 
         addingSong: (state, action) => {
-            console.log("adding",action.payload)
-            console.log("before",state.currentSongs.length)
             state.currentSongs.unshift(action.payload)
             state.mySongs.unshift(action.payload)
-            console.log("before",state.currentSongs.length)
             state.songStatus = 'loaded';
             state.songError = null;
         },

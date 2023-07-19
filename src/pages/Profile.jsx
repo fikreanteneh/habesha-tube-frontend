@@ -74,9 +74,10 @@ export const Profile = () => {
             <CenterContainer>
               {mySongs.map((song, index) => ( <SongCard key={song.id} song={song} selecting={setSelectedSong} type="editor" index={index + 1}/>))}
         </CenterContainer>}
-        {selectedSong && 
+        {selectedSong > 0 && 
         <PlayerContainer>
            <AudioPlayer 
+           id = 'audio-player'
            controls 
            onEnded={handleNext}
            autoPlay={true}>

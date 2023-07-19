@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux';
 import { Spinner } from './components/Spinner';
 import 'react-toastify/dist/ReactToastify.css';
 import { EditSong } from './pages/EditSong';
+import { WrongRoute } from './pages/WrongRoute';
 
 
 export const Root = () => {
@@ -55,6 +56,7 @@ const router = createBrowserRouter(
           <Route path='/signup' element={<Signup />} />
         </Route>
       </Route>
+      <Route path='*' element={<WrongRoute/>}/>
 
     </>
   )
