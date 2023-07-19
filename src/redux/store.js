@@ -11,6 +11,7 @@ export const store = configureStore({
     reducer: { auth: authReducer, songs: songReducer},
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({serializableCheck: false}).concat(sagaMiddleware),
+    devTools: import.meta.env.VITE_APP_CODE == "PRODUCTION",
   })
     
 sagaMiddleware.run(authSaga)
